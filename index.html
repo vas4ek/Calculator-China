@@ -103,7 +103,7 @@
   .panel[data-kind="b"] { border-color: var(--jade-line); }
   .phead { padding: 14px 18px; border-bottom: 1px solid var(--hair); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
   .phead .t { font-size: 13px; font-weight: 600; }
-  .phead .r { font-size: 11.5px; color: var(--muted); }
+  .phead .r { font-size: 11px; color: var(--muted); flex-basis: 100%; }
   .tag { font-size: 9.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; padding: 3px 7px; border-radius: 3px; white-space: nowrap; }
   .tag.warn { color: var(--ochre); background: var(--ochre-tint); }
   .tag.ok { color: var(--jade); background: var(--jade-tint); }
@@ -197,6 +197,10 @@
             <div class="ipt"><input id="usdA" type="text" inputmode="decimal" value="82.00"><span class="unit">₽</span></div>
           </div>
         </div>
+        <div class="field">
+          <label for="cnyUsdA">¥ за 1 $</label>
+          <div class="ipt"><input id="cnyUsdA" type="text" inputmode="decimal" value="7.15"><span class="unit">¥</span></div>
+        </div>
       </div>
 
       <div class="sec">
@@ -210,6 +214,10 @@
             <label for="usdB">₽ за 1 $</label>
             <div class="ipt"><input id="usdB" type="text" inputmode="decimal" value="84.00"><span class="unit">₽</span></div>
           </div>
+        </div>
+        <div class="field">
+          <label for="cnyUsdB">¥ за 1 $</label>
+          <div class="ipt"><input id="cnyUsdB" type="text" inputmode="decimal" value="7.12"><span class="unit">¥</span></div>
         </div>
       </div>
 
@@ -240,6 +248,7 @@
           <div class="phead">
             <span class="t">На момент закупки</span>
             <span class="tag warn">неполная модель</span>
+            <span class="r num" id="rateA"></span>
           </div>
           <div class="tblwrap">
             <table class="led num">
@@ -255,6 +264,7 @@
           <div class="phead">
             <span class="t">На момент получения</span>
             <span class="tag ok">рабочая модель</span>
+            <span class="r num" id="rateB"></span>
           </div>
           <div class="tblwrap">
             <table class="led num">
@@ -272,6 +282,8 @@
         <div class="rows">
           <div class="row"><span class="k">Курс ₽ за 1 ¥</span><span class="v num" id="dCny"></span></div>
           <div class="row"><span class="k">Курс ₽ за 1 $</span><span class="v num" id="dUsd"></span></div>
+          <div class="row"><span class="k">Курс ¥ за 1 $</span><span class="v num" id="dCnyUsd"></span></div>
+          <div class="row"><span class="k">Выгоднее менять на момент получения</span><span class="v num" id="better"></span></div>
           <div class="row"><span class="k">Курсовая разница на юаневой части</span><span class="v num" id="fxDiff"></span></div>
           <div class="row"><span class="k">Недоучтено в первой колонке (фрахт и доставка по РФ)</span><span class="v num" id="logDiff"></span></div>
           <div class="row"><span class="k">Итого первая колонка занижает себестоимость на</span><span class="v num" id="totDiff"></span></div>
@@ -310,7 +322,8 @@
   "use strict";
 
   var NBSP = " ";
-  var ids = ["goods", "chinaDel", "extras", "insPct", "cnyA", "usdA", "cnyB", "usdB", "freight", "mskTula", "markup"];
+  var ids = ["goods", "chinaDel", "extras", "insPct", "cnyA", "usdA", "cnyUsdA",
+             "cnyB", "usdB", "cnyUsdB", "freight", "mskTula", "markup"];
 
   function $(id) { return document.getElementById(id); }
 
@@ -346,11 +359,13 @@
 
   function calc() {
     var goods = val("goods"), chinaDel = val("chinaDel"), extras = val("extras"), insPct = val("insPct");
-    var cnyA = rate("cnyA"), usdA = rate("usdA"), cnyB = rate("cnyB"), usdB = rate("usdB");
+    var cnyA = rate("cnyA"), usdA = rate("usdA"), cuA = rate("cnyUsdA");
+    var cnyB = rate("cnyB"), usdB = rate("usdB"), cuB = rate("cnyUsdB");
     var freight = val("freight"), mskTula = val("mskTula"), markup = val("markup");
 
     var bad = !isFinite(goods) || !isFinite(chinaDel) || !isFinite(extras) || !isFinite(insPct) ||
-              !isFinite(cnyA) || !isFinite(usdA) || !isFinite(cnyB) || !isFinite(usdB) ||
+              !isFinite(cnyA) || !isFinite(usdA) || !isFinite(cuA) ||
+              !isFinite(cnyB) || !isFinite(usdB) || !isFinite(cuB) ||
               !isFinite(freight) || !isFinite(mskTula) || !isFinite(markup);
 
     if (bad) {
@@ -370,38 +385,60 @@
     ];
 
     // Колонка А — курсы дня оплаты, только юаневая часть.
+    // Юани в доллары идут по курсу ¥/$, в рубли — по курсу ₽/¥: это разные рынки.
     var htmlA = "", i, v;
     for (i = 0; i < items.length; i++) {
       v = items[i][1];
-      htmlA += line(items[i][0], v, v * cnyA / usdA, v * cnyA);
+      htmlA += line(items[i][0], v, v / cuA, v * cnyA);
     }
     $("rowsA").innerHTML = htmlA;
     var totA = yuan * cnyA;
     $("aY").innerHTML = cny(yuan);
-    $("aU").innerHTML = usd(totA / usdA);
+    $("aU").innerHTML = usd(yuan / cuA);
     $("aR").innerHTML = rub(totA);
 
     // Колонка Б — курсы дня получения плюс логистика.
     var htmlB = "";
     for (i = 0; i < items.length; i++) {
       v = items[i][1];
-      htmlB += line(items[i][0], v, v * cnyB / usdB, v * cnyB);
+      htmlB += line(items[i][0], v, v / cuB, v * cnyB);
     }
     var freightR = freight * usdB;
-    htmlB += line("Доставка Китай — РФ", freightR / cnyB, freight, freightR, "extra");
+    htmlB += line("Доставка Китай — РФ", freight * cuB, freight, freightR, "extra");
     htmlB += line("Доставка Москва — Тула", mskTula / cnyB, mskTula / usdB, mskTula, "extra");
     $("rowsB").innerHTML = htmlB;
 
     var totB = yuan * cnyB + freightR + mskTula;
-    $("bY").innerHTML = cny(totB / cnyB);
-    $("bU").innerHTML = usd(totB / usdB);
+    $("bY").innerHTML = cny(yuan + freight * cuB + mskTula / cnyB);
+    $("bU").innerHTML = usd(yuan / cuB + freight + mskTula / usdB);
     $("bR").innerHTML = rub(totB);
+
+    // Кросс-курс: во сколько обходится юань, если покупать его через доллар.
+    var crossA = usdA / cuA, crossB = usdB / cuB;
+    $("rateA").innerHTML = "₽/¥ напрямую " + fmt(cnyA) + " · через $ " + fmt(crossA);
+    $("rateB").innerHTML = "₽/¥ напрямую " + fmt(cnyB) + " · через $ " + fmt(crossB);
 
     // Отклонения курсов.
     var dc = (cnyB - cnyA) / cnyA * 100;
     var du = (usdB - usdA) / usdA * 100;
     setDev("dCny", fmt(cnyA) + " → " + fmt(cnyB) + "  " + pct(dc), dc);
     setDev("dUsd", fmt(usdA) + " → " + fmt(usdB) + "  " + pct(du), du);
+    var dcu = (cuB - cuA) / cuA * 100;
+    setDev("dCnyUsd", fmt(cuA) + " → " + fmt(cuB) + "  " + pct(dcu), dcu);
+
+    // Что дешевле на день получения: прямой обмен рублей на юани или покупка через доллар.
+    var save = yuan * Math.abs(cnyB - crossB);
+    var bt = $("better");
+    if (Math.abs(cnyB - crossB) < 0.005) {   // разница в пределах округления копейки
+      bt.innerHTML = "разницы нет — курсы совпали";
+      bt.className = "v num";
+    } else if (crossB < cnyB) {
+      bt.innerHTML = "через доллар · дешевле на " + rub(save);
+      bt.className = "v num ok";
+    } else {
+      bt.innerHTML = "напрямую ₽ → ¥ · дешевле на " + rub(save);
+      bt.className = "v num ok";
+    }
 
     var fxDiff = yuan * (cnyB - cnyA);
     var logDiff = freightR + mskTula;
