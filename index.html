@@ -68,6 +68,14 @@
     font-weight: 600; letter-spacing: -.02em; line-height: 1.12;
   }
   .sub { color: var(--muted); font-size: 15px; max-width: 68ch; }
+  .cargo { font-size: 13.5px; color: var(--ink-2); }
+  .cargo b { color: var(--ink); font-weight: 600; }
+  .calcout {
+    display: grid; grid-template-columns: 1fr auto; gap: 6px 12px;
+    background: var(--sunken); border: 1px solid var(--hair); border-radius: 5px; padding: 10px 12px;
+  }
+  .calcout .k { font-size: 12.5px; color: var(--muted); }
+  .calcout .v { font-size: 13.5px; font-weight: 600; text-align: right; white-space: nowrap; }
 
   .cols { display: grid; grid-template-columns: minmax(260px, 300px) 1fr; gap: 24px; align-items: start; }
   @media (max-width: 940px) { .cols { grid-template-columns: 1fr; } }
@@ -160,11 +168,38 @@
   <header>
     <span class="eyebrow">Закупка в Китае</span>
     <h1>Себестоимость: на момент закупки и на момент получения</h1>
+    <p class="cargo num" id="cargoLine"></p>
     <p class="sub">Одни и те же затраты, посчитанные по двум курсам. Левая колонка — как это выглядит в день оплаты: без фрахта и доставки по России, по старому курсу. Правая — фактическая себестоимость на момент получения груза, от неё и считается наценка.</p>
   </header>
 
   <div class="cols">
     <div class="card stack">
+      <div class="sec">
+        <span class="legend">Груз</span>
+        <div class="field">
+          <label for="cargo">Название</label>
+          <div class="ipt"><input id="cargo" type="text" value="Квадроцикл, CF Moto 520L"></div>
+        </div>
+        <div class="pair">
+          <div class="field">
+            <label for="weight">Вес после упаковки</label>
+            <div class="ipt"><input id="weight" type="text" inputmode="decimal" value="420"><span class="unit">кг</span></div>
+          </div>
+          <div class="field">
+            <label for="volume">Объём</label>
+            <div class="ipt"><input id="volume" type="text" inputmode="decimal" value="2.1"><span class="unit">м³</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="usdPerKg">Ставка фрахта</label>
+          <div class="ipt"><input id="usdPerKg" type="text" inputmode="decimal" value="3.50"><span class="unit">$/кг</span></div>
+        </div>
+        <div class="calcout">
+          <span class="k">Фрахт Китай — РФ</span><span class="v num" id="freightOut"></span>
+          <span class="k">Плотность</span><span class="v num" id="density"></span>
+        </div>
+      </div>
+
       <div class="sec">
         <span class="legend">Затраты в юанях</span>
         <div class="field">
@@ -222,11 +257,7 @@
       </div>
 
       <div class="sec">
-        <span class="legend b">Логистика и наценка</span>
-        <div class="field">
-          <label for="freight">Доставка Китай — РФ</label>
-          <div class="ipt"><input id="freight" type="text" inputmode="decimal" value="1500"><span class="unit">$</span></div>
-        </div>
+        <span class="legend b">Доставка по России и наценка</span>
         <div class="field">
           <label for="mskTula">Доставка Москва — Тула</label>
           <div class="ipt"><input id="mskTula" type="text" inputmode="decimal" value="15000"><span class="unit">₽</span></div>
@@ -322,8 +353,9 @@
   "use strict";
 
   var NBSP = " ";
-  var ids = ["goods", "chinaDel", "extras", "insPct", "cnyA", "usdA", "cnyUsdA",
-             "cnyB", "usdB", "cnyUsdB", "freight", "mskTula", "markup"];
+  var ids = ["cargo", "weight", "volume", "usdPerKg",
+             "goods", "chinaDel", "extras", "insPct", "cnyA", "usdA", "cnyUsdA",
+             "cnyB", "usdB", "cnyUsdB", "mskTula", "markup"];
 
   function $(id) { return document.getElementById(id); }
 
@@ -361,12 +393,28 @@
     var goods = val("goods"), chinaDel = val("chinaDel"), extras = val("extras"), insPct = val("insPct");
     var cnyA = rate("cnyA"), usdA = rate("usdA"), cuA = rate("cnyUsdA");
     var cnyB = rate("cnyB"), usdB = rate("usdB"), cuB = rate("cnyUsdB");
-    var freight = val("freight"), mskTula = val("mskTula"), markup = val("markup");
+    var weight = val("weight"), volume = val("volume"), usdPerKg = val("usdPerKg");
+    var mskTula = val("mskTula"), markup = val("markup");
+    var freight = weight * usdPerKg;   // фрахт без дополнительных трат
+
+    // Шапка: что за груз и его габариты.
+    var name = String($("cargo").value).replace(/^\s+|\s+$/g, "");
+    var head = name ? "<b>" + esc(name) + "</b>" : "<b>Груз</b>";
+    if (isFinite(weight) && weight > 0) head += " · " + fmt(weight, 0) + " кг";
+    if (isFinite(volume) && volume > 0) head += " · " + fmt(volume, 2) + " м³";
+    if (isFinite(weight) && isFinite(volume) && weight > 0 && volume > 0) {
+      head += " · " + fmt(weight / volume, 0) + " кг/м³";
+    }
+    $("cargoLine").innerHTML = head;
+
+    $("freightOut").innerHTML = isFinite(freight) ? usd(freight) : "—";
+    $("density").innerHTML = (isFinite(weight) && isFinite(volume) && volume > 0)
+      ? fmt(weight / volume, 0) + " кг/м³" : "—";
 
     var bad = !isFinite(goods) || !isFinite(chinaDel) || !isFinite(extras) || !isFinite(insPct) ||
               !isFinite(cnyA) || !isFinite(usdA) || !isFinite(cuA) ||
               !isFinite(cnyB) || !isFinite(usdB) || !isFinite(cuB) ||
-              !isFinite(freight) || !isFinite(mskTula) || !isFinite(markup);
+              !isFinite(weight) || !isFinite(usdPerKg) || !isFinite(mskTula) || !isFinite(markup);
 
     if (bad) {
       $("rowsA").innerHTML = '<tr><td colspan="4" class="empty">Заполните суммы и курсы — курсы должны быть больше нуля.</td></tr>';
@@ -404,7 +452,8 @@
       htmlB += line(items[i][0], v, v / cuB, v * cnyB);
     }
     var freightR = freight * usdB;
-    htmlB += line("Доставка Китай — РФ", freight * cuB, freight, freightR, "extra");
+    htmlB += line("Фрахт Китай — РФ · " + fmt(weight, 0) + " кг × " + fmt(usdPerKg) + " $",
+                  freight * cuB, freight, freightR, "extra");
     htmlB += line("Доставка Москва — Тула", mskTula / cnyB, mskTula / usdB, mskTula, "extra");
     $("rowsB").innerHTML = htmlB;
 
