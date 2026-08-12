@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Как дешевле купить за юани</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, p, ul, ol, figure { margin: 0; }
+  input { font: inherit; color: inherit; }
+
+  :root {
+    --bg: #EEF1EF;
+    --surface: #FFFFFF;
+    --sunken: #F4F7F5;
+    --ink: #101A17;
+    --ink-2: #3C4C46;
+    --muted: #6B7A74;
+    --line: #DCE3E0;
+    --hair: #E8EDEB;
+    --jade: #0B6B55;
+    --jade-tint: #E8F2EE;
+    --jade-line: #7EADA1;
+    --jade-line-soft: #9DBFB6;
+    --ochre: #91641F;
+    --ochre-tint: #F6F0E4;
+    --rose: #A03329;
+    --rose-tint: #FAEDEB;
+    --shadow: 0 1px 1px rgba(16, 26, 23, .04), 0 12px 32px -22px rgba(16, 26, 23, .5);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0A100E;
+      --surface: #121B18;
+      --sunken: #0E1614;
+      --ink: #E8EFEC;
+      --ink-2: #BDCAC5;
+      --muted: #87968F;
+      --line: #223029;
+      --hair: #1A2521;
+      --jade: #4ED9A6;
+      --jade-tint: #14312A;
+      --jade-line: #367C61;
+      --jade-line-soft: #2F634F;
+      --ochre: #D9A45E;
+      --ochre-tint: #2A2418;
+      --rose: #E8796B;
+      --rose-tint: #33201D;
+      --shadow: 0 1px 1px rgba(0, 0, 0, .5), 0 12px 32px -22px rgba(0, 0, 0, 1);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0A100E;
+    --surface: #121B18;
+    --sunken: #0E1614;
+    --ink: #E8EFEC;
+    --ink-2: #BDCAC5;
+    --muted: #87968F;
+    --line: #223029;
+    --hair: #1A2521;
+    --jade: #4ED9A6;
+    --jade-tint: #14312A;
+    --jade-line: #367C61;
+    --jade-line-soft: #2F634F;
+    --ochre: #D9A45E;
+    --ochre-tint: #2A2418;
+    --rose: #E8796B;
+    --rose-tint: #33201D;
+    --shadow: 0 1px 1px rgba(0, 0, 0, .5), 0 12px 32px -22px rgba(0, 0, 0, 1);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+  }
+  .num { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 56px 24px 110px; }
+
+  header { display: flex; flex-direction: column; gap: 8px; margin-bottom: 34px; }
+  .eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--jade); font-weight: 700; }
+  h1 {
+    font-family: ui-serif, "Iowan Old Style", Georgia, serif;
+    font-size: clamp(28px, 4.4vw, 40px);
+    font-weight: 600; letter-spacing: -.02em; line-height: 1.12; text-wrap: balance;
+  }
+  .sub { color: var(--muted); font-size: 15px; max-width: 56ch; }
+
+  .cols { display: grid; grid-template-columns: minmax(300px, 380px) 1fr; gap: 28px; align-items: start; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+  }
+  .stack { display: flex; flex-direction: column; }
+
+  .sec { padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+  .sec + .sec { border-top: 1px solid var(--hair); }
+  .legend {
+    font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--muted); font-weight: 700;
+  }
+  .legend.acc { color: var(--ochre); }
+
+  .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .field label { font-size: 13px; color: var(--ink-2); }
+  .ipt { position: relative; display: flex; align-items: center; }
+  .ipt input {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 17px; color: var(--ink);
+    background: var(--sunken);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    padding: 11px 42px 11px 13px;
+    width: 100%; min-width: 0;
+  }
+  .ipt .unit {
+    position: absolute; right: 13px; font-size: 14px; color: var(--muted); pointer-events: none;
+  }
+  .ipt input:focus-visible { outline: 2px solid var(--jade); outline-offset: 1px; border-color: transparent; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 380px) { .pair { grid-template-columns: 1fr; } }
+
+  .results { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .warn, .tblwrap { min-width: 0; max-width: 100%; }
+
+  .route {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "name total" "gap delta" "steps steps";
+    gap: 10px 20px; align-items: baseline;
+    position: relative; overflow: hidden;
+  }
+  .route::before {
+    content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: transparent;
+  }
+  .route[data-sel="1"]::before { background: var(--jade); }
+  .route[data-sel="1"] { border-color: var(--jade-line); }
+  .route[data-sel="0"] { color: var(--muted); }
+  .route:hover { border-color: var(--jade-line-soft); }
+  .route:focus-visible { outline: 2px solid var(--jade); outline-offset: 2px; }
+  .route .name { grid-area: name; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 9px; }
+  .dot {
+    width: 15px; height: 15px; flex: none; border-radius: 50%;
+    border: 1.5px solid var(--line); position: relative;
+  }
+  .route[data-sel="1"] .dot { border-color: var(--jade); }
+  .route[data-sel="1"] .dot::after {
+    content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--jade);
+  }
+  .chip {
+    font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+    color: var(--jade); background: var(--jade-tint); padding: 3px 7px; border-radius: 3px;
+  }
+  .route .total { grid-area: total; font-size: 21px; font-weight: 600; text-align: right; white-space: nowrap; }
+  .route[data-sel="1"] .total, .route[data-sel="1"] .name { color: var(--ink); }
+  .route .steps {
+    grid-area: steps; min-width: 0; font-size: 12.5px; color: var(--muted);
+    overflow-x: auto; white-space: nowrap;
+  }
+  .route .delta { grid-area: delta; font-size: 12.5px; text-align: right; white-space: nowrap; color: var(--ochre); }
+  .route[data-best="1"] .delta { color: var(--jade); }
+  .route[data-best="1"][data-sel="0"] .delta { color: var(--muted); }
+  @media (max-width: 560px) {
+    .route { grid-template-columns: 1fr; grid-template-areas: "name" "total" "delta" "steps"; }
+    .route .total, .route .delta { text-align: left; }
+    .route .steps { white-space: normal; overflow-x: visible; }
+  }
+
+  .summary {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .summary .head {
+    padding: 16px 22px; border-bottom: 1px solid var(--hair);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  }
+  .summary .head .t { font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .summary .head .via { font-size: 12.5px; color: var(--muted); }
+  .ledger { padding: 6px 22px 4px; }
+  .row {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+    padding: 11px 0; border-bottom: 1px solid var(--hair);
+  }
+  .row:last-child { border-bottom: 0; }
+  .row .k { font-size: 14px; color: var(--ink-2); }
+  .row .v { font-size: 16px; white-space: nowrap; }
+  .profit {
+    display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; align-items: end;
+    padding: 18px 22px 20px; background: var(--jade-tint); border-top: 1px solid var(--hair);
+  }
+  .profit[data-neg="1"] { background: var(--rose-tint); }
+  .profit .k { font-size: 11px; letter-spacing: .13em; text-transform: uppercase; font-weight: 700; color: var(--jade); }
+  .profit[data-neg="1"] .k { color: var(--rose); }
+  .profit .v {
+    font-family: ui-serif, "Iowan Old Style", Georgia, serif;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(26px, 4.5vw, 34px); font-weight: 600; letter-spacing: -.01em; line-height: 1.1;
+    text-align: right;
+  }
+  .profit .note { font-size: 12px; color: var(--muted); }
+  .profit .pct {
+    font-size: 15px; font-weight: 600; text-align: right; white-space: nowrap; color: var(--jade);
+  }
+  .profit[data-neg="1"] .pct { color: var(--rose); }
+  @media (max-width: 560px) {
+    .profit { grid-template-columns: 1fr; }
+    .profit .v, .profit .pct { text-align: left; }
+  }
+
+  .empty { color: var(--muted); font-size: 14px; padding: 22px; }
+  .hint { color: var(--muted); font-size: 12.5px; padding: 2px 4px; }
+  .warn {
+    background: var(--ochre-tint); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 18px; font-size: 13.5px; color: var(--ink-2); line-height: 1.45;
+  }
+  .warn b { color: var(--ochre); }
+  .tblcap { margin: 12px 0 8px; font-size: 12.5px; color: var(--muted); }
+  .tblwrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  .tbl th, .tbl td { padding: 5px 9px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+  .tbl thead th { color: var(--muted); font-weight: 700; font-size: 11px; }
+  .tbl tbody th { text-align: left; color: var(--ochre); font-weight: 600; }
+  .tbl tbody tr:last-child th, .tbl tbody tr:last-child td { border-bottom: 0; }
+  .ipt input[readonly] { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Закупка в Китае</span>
+    <h1>Как дешевле купить за юани</h1>
+    <p class="sub">Цена товара в юанях и курсы на сегодня — считаю рублёвую себестоимость по каждому маршруту обмена и итоговую прибыль с продажи.</p>
+  </header>
+
+  <div class="cols">
+    <div class="card stack">
+      <div class="sec">
+        <span class="legend">Сделка</span>
+        <div class="field">
+          <label for="price">Цена товара</label>
+          <div class="ipt"><input id="price" type="text" inputmode="decimal" value="30000"><span class="unit">¥</span></div>
+        </div>
+        <div class="field">
+          <label for="sale">Цена продажи</label>
+          <div class="ipt"><input id="sale" type="text" inputmode="decimal" value="450000"><span class="unit">₽</span></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <span class="legend">Прямой обмен</span>
+        <div class="field">
+          <label for="rubCny">Рублей за 1 юань</label>
+          <div class="ipt"><input id="rubCny" type="text" inputmode="decimal" value="11.50"><span class="unit">₽</span></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <span class="legend acc">Через доллар</span>
+        <div class="pair">
+          <div class="field">
+            <label for="rubUsd">₽ за 1 $</label>
+            <div class="ipt"><input id="rubUsd" type="text" inputmode="decimal" value="82.00"><span class="unit">₽</span></div>
+          </div>
+          <div class="field">
+            <label for="usdCny">¥ за 1 $</label>
+            <div class="ipt"><input id="usdCny" type="text" inputmode="decimal" value="7.15"><span class="unit">¥</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="results">
+      <div class="warn" id="jsoff">
+        <b>Файл открыт в просмотрщике, а не в браузере.</b> Печатать в полях можно, но пересчёта не будет: просмотрщик не выполняет скрипты. Цифры ниже — пример для значений по умолчанию.<br>
+        Где считает: на компьютере — сохраните файл и откройте двойным кликом (Chrome, Safari, Edge); на Android — «Открыть с помощью» → браузер. На iPhone стандартный просмотр «Файлов» скрипты не запускает — нужен файловый менеджер со встроенным браузером либо ссылка на страницу.<br>
+        А пока — считайте по таблице ниже.
+        <p class="tblcap">Готовая таблица себестоимости — курс × цена товара, в рублях. Для маршрута через доллар курс считается как «₽ за 1 $» ÷ «¥ за 1 $»: например 82,00 ÷ 7,15 = 11,47.</p>
+        <div class="tblwrap">
+        <table class="tbl num">
+          <thead><tr><th>Курс ₽/¥</th><th>10 000 ¥</th><th>30 000 ¥</th><th>50 000 ¥</th><th>100 000 ¥</th></tr></thead>
+          <tbody>
+            <tr><th>10,00</th><td>100 000</td><td>300 000</td><td>500 000</td><td>1 000 000</td></tr>
+            <tr><th>10,25</th><td>102 500</td><td>307 500</td><td>512 500</td><td>1 025 000</td></tr>
+            <tr><th>10,50</th><td>105 000</td><td>315 000</td><td>525 000</td><td>1 050 000</td></tr>
+            <tr><th>10,75</th><td>107 500</td><td>322 500</td><td>537 500</td><td>1 075 000</td></tr>
+            <tr><th>11,00</th><td>110 000</td><td>330 000</td><td>550 000</td><td>1 100 000</td></tr>
+            <tr><th>11,25</th><td>112 500</td><td>337 500</td><td>562 500</td><td>1 125 000</td></tr>
+            <tr><th>11,50</th><td>115 000</td><td>345 000</td><td>575 000</td><td>1 150 000</td></tr>
+            <tr><th>11,75</th><td>117 500</td><td>352 500</td><td>587 500</td><td>1 175 000</td></tr>
+            <tr><th>12,00</th><td>120 000</td><td>360 000</td><td>600 000</td><td>1 200 000</td></tr>
+            <tr><th>12,25</th><td>122 500</td><td>367 500</td><td>612 500</td><td>1 225 000</td></tr>
+            <tr><th>12,50</th><td>125 000</td><td>375 000</td><td>625 000</td><td>1 250 000</td></tr>
+            <tr><th>12,75</th><td>127 500</td><td>382 500</td><td>637 500</td><td>1 275 000</td></tr>
+            <tr><th>13,00</th><td>130 000</td><td>390 000</td><td>650 000</td><td>1 300 000</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p class="tblcap">Курс через доллар: строка — «₽ за 1 $», столбец — «¥ за 1 $», в ячейке — сколько рублей выходит за 1 ¥. Полученный курс ищите в таблице себестоимости выше.</p>
+        <div class="tblwrap">
+        <table class="tbl num">
+          <thead><tr><th>₽ за $ \ ¥ за $</th><th>6,90</th><th>7,00</th><th>7,10</th><th>7,20</th><th>7,30</th><th>7,40</th><th>7,50</th></tr></thead>
+          <tbody>
+            <tr><th>76</th><td>11,01</td><td>10,86</td><td>10,70</td><td>10,56</td><td>10,41</td><td>10,27</td><td>10,13</td></tr>
+            <tr><th>77</th><td>11,16</td><td>11,00</td><td>10,85</td><td>10,69</td><td>10,55</td><td>10,41</td><td>10,27</td></tr>
+            <tr><th>78</th><td>11,30</td><td>11,14</td><td>10,99</td><td>10,83</td><td>10,68</td><td>10,54</td><td>10,40</td></tr>
+            <tr><th>79</th><td>11,45</td><td>11,29</td><td>11,13</td><td>10,97</td><td>10,82</td><td>10,68</td><td>10,53</td></tr>
+            <tr><th>80</th><td>11,59</td><td>11,43</td><td>11,27</td><td>11,11</td><td>10,96</td><td>10,81</td><td>10,67</td></tr>
+            <tr><th>81</th><td>11,74</td><td>11,57</td><td>11,41</td><td>11,25</td><td>11,10</td><td>10,95</td><td>10,80</td></tr>
+            <tr><th>82</th><td>11,88</td><td>11,71</td><td>11,55</td><td>11,39</td><td>11,23</td><td>11,08</td><td>10,93</td></tr>
+            <tr><th>83</th><td>12,03</td><td>11,86</td><td>11,69</td><td>11,53</td><td>11,37</td><td>11,22</td><td>11,07</td></tr>
+            <tr><th>84</th><td>12,17</td><td>12,00</td><td>11,83</td><td>11,67</td><td>11,51</td><td>11,35</td><td>11,20</td></tr>
+            <tr><th>85</th><td>12,32</td><td>12,14</td><td>11,97</td><td>11,81</td><td>11,64</td><td>11,49</td><td>11,33</td></tr>
+            <tr><th>86</th><td>12,46</td><td>12,29</td><td>12,11</td><td>11,94</td><td>11,78</td><td>11,62</td><td>11,47</td></tr>
+            <tr><th>87</th><td>12,61</td><td>12,43</td><td>12,25</td><td>12,08</td><td>11,92</td><td>11,76</td><td>11,60</td></tr>
+            <tr><th>88</th><td>12,75</td><td>12,57</td><td>12,39</td><td>12,22</td><td>12,05</td><td>11,89</td><td>11,73</td></tr>
+            <tr><th>89</th><td>12,90</td><td>12,71</td><td>12,54</td><td>12,36</td><td>12,19</td><td>12,03</td><td>11,87</td></tr>
+            <tr><th>90</th><td>13,04</td><td>12,86</td><td>12,68</td><td>12,50</td><td>12,33</td><td>12,16</td><td>12,00</td></tr>
+            <tr><th>91</th><td>13,19</td><td>13,00</td><td>12,82</td><td>12,64</td><td>12,47</td><td>12,30</td><td>12,13</td></tr>
+            <tr><th>92</th><td>13,33</td><td>13,14</td><td>12,96</td><td>12,78</td><td>12,60</td><td>12,43</td><td>12,27</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div id="routes"><div class="results">
+        <div class="route" role="radio" tabindex="0" aria-checked="false" data-key="direct" data-best="0" data-sel="0">
+          <div class="name"><span class="dot"></span>Напрямую ₽ → ¥</div>
+          <div class="total num">345&nbsp;000 ₽</div>
+          <div class="steps num">30&nbsp;000 ¥ × 11,50 = 345&nbsp;000 ₽</div>
+          <div class="delta num">+944 ₽ · 11,50 ₽ за 1 ¥</div>
+        </div>
+        <div class="route" role="radio" tabindex="0" aria-checked="true" data-key="usd" data-best="1" data-sel="1">
+          <div class="name"><span class="dot"></span>Через доллар ₽ → $ → ¥<span class="chip">дешевле</span></div>
+          <div class="total num">344&nbsp;056 ₽</div>
+          <div class="steps num">30&nbsp;000 ¥ ÷ 7,15 = 4&nbsp;195,80 $ × 82,00 = 344&nbsp;056 ₽</div>
+          <div class="delta num">11,47 ₽ за 1 ¥</div>
+        </div>
+      </div></div>
+      <div class="summary" id="summary">
+        <div class="head">
+          <span class="t">Итог сделки</span>
+          <span class="via" id="via">через доллар</span>
+        </div>
+        <div class="ledger">
+          <div class="row"><span class="k">Цена покупки</span><span class="v num" id="buy">344&nbsp;056 ₽</span></div>
+          <div class="row"><span class="k">Цена продажи</span><span class="v num" id="sell">450&nbsp;000 ₽</span></div>
+        </div>
+        <div class="profit" id="profitBox" data-neg="0">
+          <span class="k" id="profitLabel">Прибыль</span>
+          <span class="v" id="profit">+105&nbsp;944 ₽</span>
+          <span class="note">наценка к себестоимости</span>
+          <span class="pct num" id="pct">+30,8 %</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var NBSP = " ";
+  var ids = ["price", "sale", "rubCny", "rubUsd", "usdCny"];
+  var selected = "";
+
+  function $(id) { return document.getElementById(id); }
+
+  function num(el) {
+    var v = parseFloat(String(el.value).replace(/[\s ]/g, "").replace(",", "."));
+    return isFinite(v) && v > 0 ? v : NaN;
+  }
+
+  // Своё форматирование: не зависит от локали устройства, везде одинаково.
+  function fmt(n, d) {
+    if (d === undefined) d = 2;
+    var neg = n < 0;
+    var s = Math.abs(n).toFixed(d);
+    var parts = s.split(".");
+    var int = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, NBSP);
+    return (neg ? "−" : "") + int + (parts[1] ? "," + parts[1] : "");
+  }
+  function rub(n) { return fmt(Math.round(n), 0) + " ₽"; }
+  function pct(n) { return (n < 0 ? "−" : "+") + fmt(Math.abs(n), 1) + " %"; }
+
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  function calc() {
+    var price = num($("price"));
+    var sale = num($("sale"));
+    var rubCny = num($("rubCny"));
+    var rubUsd = num($("rubUsd"));
+    var usdCny = num($("usdCny"));
+
+    var routes = [];
+    if (price && rubCny) {
+      routes.push({
+        key: "direct", name: "Напрямую ₽ → ¥", short: "прямой обмен",
+        total: price * rubCny, rate: rubCny,
+        steps: fmt(price, 0) + " ¥ × " + fmt(rubCny) + " = " + rub(price * rubCny)
+      });
+    }
+    if (price && rubUsd && usdCny) {
+      var usd = price / usdCny;
+      routes.push({
+        key: "usd", name: "Через доллар ₽ → $ → ¥", short: "через доллар",
+        total: usd * rubUsd, rate: rubUsd / usdCny,
+        steps: fmt(price, 0) + " ¥ ÷ " + fmt(usdCny) + " = " + fmt(usd) + " $ × " + fmt(rubUsd) + " = " + rub(usd * rubUsd)
+      });
+    }
+
+    var box = $("routes");
+    var summary = $("summary");
+
+    if (!routes.length) {
+      box.innerHTML = '<div class="route" style="display:block"><p class="empty" style="padding:0">Заполните цену и курсы.</p></div>';
+      summary.style.display = "none";
+      return;
+    }
+    summary.style.display = "";
+
+    var best = routes[0].total, i;
+    for (i = 1; i < routes.length; i++) if (routes[i].total < best) best = routes[i].total;
+
+    var found = false;
+    for (i = 0; i < routes.length; i++) if (routes[i].key === selected) found = true;
+    if (!found) {
+      for (i = 0; i < routes.length; i++) if (routes[i].total === best) { selected = routes[i].key; break; }
+    }
+
+    var html = '<div class="results">';
+    for (i = 0; i < routes.length; i++) {
+      var r = routes[i];
+      var isBest = r.total === best;
+      var isSel = r.key === selected;
+      html += '<div class="route" role="radio" tabindex="0" aria-checked="' + (isSel ? "true" : "false") + '"' +
+              ' data-key="' + r.key + '" data-best="' + (isBest ? 1 : 0) + '" data-sel="' + (isSel ? 1 : 0) + '">' +
+                '<div class="name"><span class="dot"></span>' + esc(r.name) +
+                  (isBest && routes.length > 1 ? '<span class="chip">дешевле</span>' : "") +
+                '</div>' +
+                '<div class="total num">' + rub(r.total) + '</div>' +
+                '<div class="steps num">' + esc(r.steps) + '</div>' +
+                '<div class="delta num">' +
+                  (isBest ? fmt(r.rate) + " ₽ за 1 ¥"
+                          : "+" + rub(r.total - best) + " · " + fmt(r.rate) + " ₽ за 1 ¥") +
+                '</div>' +
+              '</div>';
+    }
+    box.innerHTML = html + "</div>";
+
+    var cards = box.getElementsByClassName("route");
+    for (i = 0; i < cards.length; i++) bind(cards[i]);
+
+    var win = null;
+    for (i = 0; i < routes.length; i++) if (routes[i].key === selected) win = routes[i];
+
+    $("via").innerHTML = esc(win.short);
+    $("buy").innerHTML = rub(win.total);
+
+    if (!sale) {
+      $("sell").innerHTML = "—";
+      $("profit").innerHTML = "—";
+      $("pct").innerHTML = "—";
+      $("profitBox").setAttribute("data-neg", "0");
+      $("profitLabel").innerHTML = "Прибыль";
+      return;
+    }
+
+    var p = sale - win.total;
+    var markup = p / win.total * 100;   // наценка к себестоимости
+
+    $("sell").innerHTML = rub(sale);
+    $("profitBox").setAttribute("data-neg", p < 0 ? "1" : "0");
+    $("profitLabel").innerHTML = p < 0 ? "Убыток" : "Прибыль";
+    $("profit").innerHTML = (p < 0 ? "−" : "+") + rub(Math.abs(p));
+    $("pct").innerHTML = pct(markup);
+  }
+
+  function bind(el) {
+    function pick() { selected = el.getAttribute("data-key"); calc(); }
+    on(el, "click", pick);
+    on(el, "keydown", function (e) {
+      var k = e.keyCode || e.which;
+      if (k === 13 || k === 32) { if (e.preventDefault) e.preventDefault(); pick(); }
+    });
+  }
+
+  function on(el, ev, fn) {
+    if (el.addEventListener) el.addEventListener(ev, fn, false);
+    else if (el.attachEvent) el.attachEvent("on" + ev, fn);
+  }
+
+  function start() {
+    var box = $("jsoff");
+    if (box) box.style.display = "none";
+    for (var i = 0; i < ids.length; i++) {
+      var el = $(ids[i]);
+      if (!el) continue;
+      el.removeAttribute("readonly");
+      // Несколько событий: старые мобильные браузеры шлют не все из них.
+      on(el, "input", calc);
+      on(el, "keyup", calc);
+      on(el, "change", calc);
+      on(el, "blur", calc);
+    }
+    calc();
+  }
+
+  if (document.readyState === "loading") on(document, "DOMContentLoaded", start);
+  else start();
+})();
+</script>
+</body>
+</html>
