@@ -98,6 +98,9 @@
     background: var(--sunken); border: 1px solid var(--line); border-radius: 5px;
     padding: 10px 40px 10px 12px; width: 100%; min-width: 0;
   }
+  /* Название — обычный шрифт вместо моноширинного и без места под единицу измерения:
+     так помещается длинная строка вроде «Квадроцикл, CF Moto 520L». */
+  .ipt input#cargo { font-family: inherit; font-size: 14.5px; padding-right: 12px; }
   .ipt .unit { position: absolute; right: 12px; font-size: 13px; color: var(--muted); pointer-events: none; }
   .ipt input:focus-visible { outline: 2px solid var(--jade); outline-offset: 1px; border-color: transparent; }
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -397,6 +400,8 @@
     var mskTula = val("mskTula"), markup = val("markup");
     var freight = weight * usdPerKg;   // фрахт без дополнительных трат
 
+    fitCargo();
+
     // Шапка: что за груз и его габариты.
     var name = String($("cargo").value).replace(/^\s+|\s+$/g, "");
     var head = name ? "<b>" + esc(name) + "</b>" : "<b>Груз</b>";
@@ -533,6 +538,18 @@
       vd += " Курс сдвинулся на 2 % и более — проверьте цену продажи.";
     }
     $("verdict").innerHTML = vd;
+  }
+
+  // Подгоняем шрифт названия, чтобы длинная строка помещалась целиком.
+  function fitCargo() {
+    var e = $("cargo");
+    if (!e) return;
+    var size = 14.5;
+    e.style.fontSize = size + "px";
+    while (e.scrollWidth > e.clientWidth && size > 10.5) {
+      size -= 0.5;
+      e.style.fontSize = size + "px";
+    }
   }
 
   function setDev(id, text, d) {
